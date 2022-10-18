@@ -4,6 +4,7 @@ namespace GabrielSantos\SistemaControleEstoqueVendas\Servicos;
 
 use Exception;
 use GabrielSantos\SistemaControleEstoqueVendas\Exceptions\DadosFormularioInvalidoException;
+use GabrielSantos\SistemaControleEstoqueVendas\Exceptions\ParametroCabecalhoRequisicaoInvalidoException;
 use GabrielSantos\SistemaControleEstoqueVendas\Repositorios\CategoriaProdutoRepositorio;
 use GabrielSantos\SistemaControleEstoqueVendas\Repositorios\ConexaoBancoDados;
 use GabrielSantos\SistemaControleEstoqueVendas\Utils\ConverterArrayBancoDadosParaArrayRespostaCategoriaProduto;
@@ -53,11 +54,13 @@ class CategoriaProdutoServico
             $resposta['conteudo'] = $e->getMessage();
             // Realizando o rollback da transação.
             $pdo->rollBack();
+            // Salvar mensagem de erro da exceção no arquivo de log.
         } catch (Exception $e) {
             $resposta['status'] = 500;
             $resposta['conteudo'] = $e->getMessage();
             // Realizando o rollback da transação.
             $pdo->rollBack();
+            // Salvar mensagem de erro da exceção no arquivo de log.
         }
         return $resposta;
     }
@@ -82,6 +85,47 @@ class CategoriaProdutoServico
         } catch (Exception $e) {
             $resposta['status'] = 500;
             $resposta['conteudo'] = [];
+            // Salvar mensagem de erro da exceção no arquivo de log.
+        }
+        return $resposta;
+    }
+    public function buscarCategoriaDeProdutoPeloId(): array
+    {
+        $resposta = [];
+        $conexao = new ConexaoBancoDados();
+        $pdo = $conexao->getConexao();
+        if ($pdo == null) {
+            return [
+                'status' => 500,
+                'conteudo' => 'Ocorreu um erro ao tentar-se realizar a conexão com o banco de dados!'
+            ];
+        }
+        try {
+            if (empty($_GET['id'])) {
+                throw new ParametroCabecalhoRequisicaoInvalidoException(
+                    'O id da categoria é um valor obrigatório para consulta!'
+                );
+            }
+            // Pegar o id em formato de um número inteiro e verificar se o id é valido.
+            $id = intval($_GET['id']);
+            if ($id === 0) {
+                throw new ParametroCabecalhoRequisicaoInvalidoException(
+                    'O id da categoria deve ser um valor numérico do tipo inteiro!'
+                );
+            }
+            $categoriaProdutoRepositorio = new CategoriaProdutoRepositorio($pdo);
+            $dadosCategoria = $categoriaProdutoRepositorio->buscarPeloId($id);
+            if (count($dadosCategoria) == 0) {
+                $resposta['conteudo'] = [];
+            } else {
+                $resposta['conteudo'] = ConverterArrayBancoDadosParaArrayRespostaCategoriaProduto
+                    ::converterArrayUnicoComDadosBuscadosPeloId($dadosCategoria);
+            }
+            $resposta['status'] = 200;
+        } catch (Exception $e) {
+            $resposta['status'] = 500;
+            $resposta['conteudo'] = $e->getMessage();
+            // Salvar mensagem de erro da exceção no arquivo de log.
         }
         return $resposta;
     }
