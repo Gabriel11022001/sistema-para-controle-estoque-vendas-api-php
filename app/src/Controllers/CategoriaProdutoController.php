@@ -23,9 +23,4 @@ class CategoriaProdutoController
         $categoriaProdutoServico = new CategoriaProdutoServico();
         echo json_encode($categoriaProdutoServico->buscarTodasCategoriasDeProdutos());
     }
-    public static function buscarCategoriaDeProdutoPeloId(): void
-    {
-        $categoriaProdutoServico = new CategoriaProdutoServico();
-        echo json_encode($categoriaProdutoServico->buscarCategoriaDeProdutoPeloId());
-    }
 }

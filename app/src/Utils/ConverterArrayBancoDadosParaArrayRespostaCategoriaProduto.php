@@ -17,12 +17,4 @@ class ConverterArrayBancoDadosParaArrayRespostaCategoriaProduto extends Converte
         }
         return $arrayConvertido;
     }
-    public static function converterArrayUnicoComDadosBuscadosPeloId(array $dadosCategoria): array
-    {
-        return [
-            'id' => $dadosCategoria['categoria_produto_id'],
-            'descricao' => $dadosCategoria['categoria_produto_descricao'],
-            'status' => $dadosCategoria['categoria_produto_status']
-        ];
-    }
 }

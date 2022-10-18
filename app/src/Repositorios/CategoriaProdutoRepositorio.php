@@ -43,15 +43,7 @@ class CategoriaProdutoRepositorio implements IRepositorio
     }
     public function buscarPeloId(int $id): array
     {
-        $query = 'SELECT * FROM tbl_categorias_produtos WHERE categoria_produto_id = :categoria_produto_id;';
-        $stmt = $this->conexaoBancoDados->prepare($query);
-        $stmt->bindValue(':categoria_produto_id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $dadosCategoriaProduto = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$dadosCategoriaProduto) {
-            return [];
-        }
-        return $dadosCategoriaProduto;
+        return [];
     }
     public function buscarTodos(): array
     {

@@ -15,7 +15,7 @@ class ConexaoBancoDados
     {
         $this->nomeBancoDados = 'db_api_sistema_controle_estoque_vendas';
         $this->usuario = 'root';
-        $this->senha = 'Gabriel@11022001';
+        $this->senha = '';
     }
     public function getConexao(): PDO|null
     {
