@@ -3,6 +3,7 @@
 require_once 'autoload.php';
 
 use GabrielSantos\SistemaControleEstoqueVendas\Servicos\CategoriaProdutoServico;
+use GabrielSantos\SistemaControleEstoqueVendas\Controllers\CategoriaProdutoController;
 
 header('Access-Control-Allow-Origin: *');
 // Definir que o tipo de dados que será tratado nessa página será json.
@@ -15,8 +16,10 @@ $endpoint = $_SERVER['REQUEST_URI'];
 $metodo = $_SERVER['REQUEST_METHOD'];
 if ($endpoint === '/api/categoria-produto' && $metodo === 'POST') {
     // Cadastrar a categoria de produto.
+    CategoriaProdutoController::cadastrarCategoriaDeProduto();
 } elseif ($endpoint === '/api/categoria-produto' && $metodo === 'GET') {
     // Buscar todas as categorias de produtos.
+    CategoriaProdutoController::buscarTodasCategoriasDeProduto();
 } elseif ($endpoint === '/api/categoria-produto/buscar-pelo-id' && $metodo === 'GET') {
     // Buscar a categoria de produto pelo id.
 } elseif ($endpoint === '/api/categoria-produto' && $metodo === 'PUT') {

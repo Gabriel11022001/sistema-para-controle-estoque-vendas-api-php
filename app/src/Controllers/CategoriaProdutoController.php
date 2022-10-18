@@ -18,4 +18,9 @@ class CategoriaProdutoController
         $categoriaProdutoServico = new CategoriaProdutoServico();
         echo json_encode($categoriaProdutoServico->salvarCategoriaDeProduto());
     }
+    public static function buscarTodasCategoriasDeProduto(): void
+    {
+        $categoriaProdutoServico = new CategoriaProdutoServico();
+        echo json_encode($categoriaProdutoServico->buscarTodasCategoriasDeProdutos());
+    }
 }
