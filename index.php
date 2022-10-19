@@ -2,14 +2,16 @@
 
 require_once 'autoload.php';
 
-use GabrielSantos\SistemaControleEstoqueVendas\Servicos\CategoriaProdutoServico;
+use GabrielSantos\SistemaControleEstoqueVendas\Utils\{
+    ConfiguraEnctypeEContentTypeApp,
+    LiberaCors,
+    DefineTimezoneDefault
+};
 use GabrielSantos\SistemaControleEstoqueVendas\Controllers\CategoriaProdutoController;
 
-header('Access-Control-Allow-Origin: *');
-// Definir que o tipo de dados que será tratado nessa página será json.
-header('Content-type: application/json');
-// Definir o timezone para o horário de São Paulo.
-date_default_timezone_set("America/Sao_Paulo");
+LiberaCors::liberarCors();
+ConfiguraEnctypeEContentTypeApp::configurarEnctypeEContentType();
+DefineTimezoneDefault::definirTimezoneDefault();
 // Endpoint da api.
 $endpoint = $_SERVER['REQUEST_URI'];
 // Método HTTP da requisição.
