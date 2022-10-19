@@ -7,6 +7,7 @@ use GabrielSantos\SistemaControleEstoqueVendas\Exceptions\DadosFormularioInvalid
 use GabrielSantos\SistemaControleEstoqueVendas\Repositorios\CategoriaProdutoRepositorio;
 use GabrielSantos\SistemaControleEstoqueVendas\Repositorios\ConexaoBancoDados;
 use GabrielSantos\SistemaControleEstoqueVendas\Utils\ConverterArrayBancoDadosParaArrayRespostaCategoriaProduto;
+use GabrielSantos\SistemaControleEstoqueVendas\Utils\Json;
 
 class CategoriaProdutoServico
 {
@@ -25,13 +26,14 @@ class CategoriaProdutoServico
         $pdo->beginTransaction();
         try {
             // Validando os dados enviados para o servidor.
-            if (empty($_POST['descricao']) || empty($_POST['status'])) {
-                throw new DadosFormularioInvalidoException('Preencha todos os campos obrigatórios!');
+            $categoriaObjeto = Json::converterJsonEmObjeto();
+            if (empty($categoriaObjeto->descricao) || empty($categoriaObjeto->status)) {
+                throw new DadosFormularioInvalidoException('Informe os campos obrigatórios!');
             }
             $categoriaProdutoDados = [
                 'id' => 0,
-                'descricao' => $_POST['descricao'],
-                'status' => $_POST['status']
+                'descricao' => $categoriaObjeto->descricao,
+                'status' => $categoriaObjeto->status
             ];
             $categoriaProdutoRepositorio = new CategoriaProdutoRepositorio($pdo);
             // Invocando o método para salvar a categoria do produto no banco de dados.
