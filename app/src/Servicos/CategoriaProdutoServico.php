@@ -15,7 +15,7 @@ class CategoriaProdutoServico
         $resposta = [];
         $conexao = new ConexaoBancoDados();
         $pdo = $conexao->getConexao();
-        if ($pdo == null) {
+        if ($pdo === null) {
             return [
                 'status' => 500,
                 'conteudo' => 'Ocorreu um erro ao tentar-se realizar a conexão com o banco de dados!'
@@ -66,7 +66,7 @@ class CategoriaProdutoServico
         $resposta = [];
         $conexao = new ConexaoBancoDados();
         $pdo = $conexao->getConexao();
-        if ($pdo == null) {
+        if ($pdo === null) {
             return [
                 'status' => 500,
                 'conteudo' => 'Ocorreu um erro ao tentar-se realizar a conexão com o banco de dados!'
@@ -82,6 +82,41 @@ class CategoriaProdutoServico
         } catch (Exception $e) {
             $resposta['status'] = 500;
             $resposta['conteudo'] = [];
+        }
+        return $resposta;
+    }
+    public function buscarCategoriaDeProdutoPeloId(): array
+    {
+        if (empty($_GET['id'])) {
+            return [
+                'status' => 500,
+                'conteudo' => 'O id da categoria não foi informado!'
+            ];
+        }
+        $id = intval($_GET['id']);
+        if ($id === 0) {
+            return [
+                'status' => 500,
+                'conteudo' => 'O id da categoria deve ser um valor numérico maior que 0 e inteiro!'
+            ];
+        }
+        $conexao = new ConexaoBancoDados();
+        $pdo = $conexao->getConexao();
+        if ($pdo === null) {
+            return [
+                'status' => 500,
+                'conteudo' => 'Ocorreu um erro ao tentar-se realizar a conexão com o banco de dados!'
+            ];
+        }
+        $resposta = [];
+        try {
+            $categoriaDeProdutoRepositorio = new CategoriaProdutoRepositorio($pdo);
+            $dadosCategoriaProduto = $categoriaDeProdutoRepositorio->buscarPeloId($id);
+            $resposta['status'] = 200;
+            $resposta['conteudo'] = $dadosCategoriaProduto;
+        } catch (Exception $e) {
+            $resposta['status'] = 500;
+            $resposta['conteudo'] = $e->getMessage();
         }
         return $resposta;
     }
