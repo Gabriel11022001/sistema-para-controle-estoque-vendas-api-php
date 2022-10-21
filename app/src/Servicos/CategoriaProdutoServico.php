@@ -89,19 +89,6 @@ class CategoriaProdutoServico
     }
     public function buscarCategoriaDeProdutoPeloId(): array
     {
-        if (empty($_GET['id'])) {
-            return [
-                'status' => 500,
-                'conteudo' => 'O id da categoria não foi informado!'
-            ];
-        }
-        $id = intval($_GET['id']);
-        if ($id === 0) {
-            return [
-                'status' => 500,
-                'conteudo' => 'O id da categoria deve ser um valor numérico maior que 0 e inteiro!'
-            ];
-        }
         $conexao = new ConexaoBancoDados();
         $pdo = $conexao->getConexao();
         if ($pdo === null) {
@@ -112,11 +99,82 @@ class CategoriaProdutoServico
         }
         $resposta = [];
         try {
+            // Verificar se o id da categoria foi informado.
+            if (empty($_GET['id'])) {
+                return [
+                    'status' => 500,
+                    'conteudo' => 'O id da categoria não foi informado!'
+                ];
+            }
+            // Verificar se o id informado é um número inteiro maior que 0!
+            $id = intval($_GET['id']);
+            if ($id === 0) {
+                return [
+                    'status' => 500,
+                    'conteudo' => 'O id da categoria deve ser um valor numérico maior que 0 e inteiro!'
+                ];
+            }
             $categoriaDeProdutoRepositorio = new CategoriaProdutoRepositorio($pdo);
             $dadosCategoriaProduto = $categoriaDeProdutoRepositorio->buscarPeloId($id);
             $resposta['status'] = 200;
             $resposta['conteudo'] = $dadosCategoriaProduto;
         } catch (Exception $e) {
+            $resposta['status'] = 500;
+            $resposta['conteudo'] = $e->getMessage();
+        }
+        return $resposta;
+    }
+    public function editarCategoriaProduto(): array
+    {
+        $resposta = [];
+        $conexao = new ConexaoBancoDados();
+        $pdo = $conexao->getConexao();
+        if ($pdo === null) {
+            return [
+                'status' => 500,
+                'conteudo' => 'Ocorreu um erro ao tentar-se realizar a conexão com o banco de dados!'
+            ];
+        }
+        // Iniciar transação.
+        $pdo->beginTransaction();
+        try {
+            // Validando os dados enviados para o servidor.
+            $categoriaObjeto = Json::converterJsonEmObjeto();
+            if (!isset($categoriaObjeto->descricao) || !isset($categoriaObjeto->status)
+            || $categoriaObjeto->descricao === '' || !isset($categoriaObjeto->id)) {
+                throw new DadosFormularioInvalidoException('Informe os campos obrigatórios!');
+            }
+            $categoriaProdutoDados = [
+                'id' => $categoriaObjeto->id,
+                'descricao' => $categoriaObjeto->descricao,
+                'status' => $categoriaObjeto->status
+            ];
+            $categoriaProdutoRepositorio = new CategoriaProdutoRepositorio($pdo);
+            if (count($categoriaProdutoRepositorio->buscarPeloId($categoriaProdutoDados['id'])) === 0) {
+                return [
+                    'status' => 404,
+                    'conteudo' => 'Não existe uma categoria de produto
+                    com esse id cadastrado no banco de dados!'
+                ];
+            }
+            if ($categoriaProdutoRepositorio->editar($categoriaProdutoDados)) {
+                $resposta['status'] = 200;
+                $resposta['conteudo'] = $categoriaProdutoDados;
+            } else {
+                $resposta['status'] = 500;
+                $resposta['conteudo'] = 'Ocorreu um erro ao tentar-se editar 
+                essa categoria, tente novamente!';
+            }
+            // Comitando a transação.
+            $pdo->commit();
+        } catch (DadosFormularioInvalidoException $e) {
+            $resposta['status'] = 400;
+            $resposta['conteudo'] = $e->getMessage();
+            // Realizando o rollback da transação.
+            $pdo->rollBack();
+        } catch (Exception $e) {
+            // Realizar o rollback da transação.
+            $pdo->rollBack();
             $resposta['status'] = 500;
             $resposta['conteudo'] = $e->getMessage();
         }

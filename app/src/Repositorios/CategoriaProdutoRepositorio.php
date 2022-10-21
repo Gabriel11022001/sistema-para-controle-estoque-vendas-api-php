@@ -8,7 +8,6 @@ use PDO;
 class CategoriaProdutoRepositorio implements IRepositorio
 {
     private PDO $conexaoBancoDados;
-    private string $nomeTabela;
 
     public function __construct(PDO $conexaoBancoDados)
     {
@@ -31,14 +30,24 @@ class CategoriaProdutoRepositorio implements IRepositorio
         $stmt = $this->conexaoBancoDados->prepare($query);
         $stmt->bindValue(':categoria_produto_descricao', $dadosEntidade['descricao']);
         $stmt->bindValue(':categoria_produto_status', $dadosEntidade['status'], PDO::PARAM_BOOL);
-        $stmt->execute();
-        if ($stmt->rowCount() > 0) {
+        if ($stmt->execute()) {
             return true;
         }
         return false;
     }
     public function editar(array $dadosEntidade): bool
     {
+        $query = 'UPDATE tbl_categorias_produtos SET
+                                   categoria_produto_descricao = :categoria_produto_descricao,
+                                   categoria_produto_status = :categoria_produto_status
+                                   WHERE categoria_produto_id = :categoria_produto_id;';
+        $stmt = $this->conexaoBancoDados->prepare($query);
+        $stmt->bindValue(':categoria_produto_descricao', $dadosEntidade['descricao']);
+        $stmt->bindValue(':categoria_produto_status', $dadosEntidade['status'], PDO::PARAM_BOOL);
+        $stmt->bindValue(':categoria_produto_id', $dadosEntidade['id'], PDO::PARAM_INT);
+        if ($stmt->execute()) {
+            return true;
+        }
         return false;
     }
     public function buscarPeloId(int $id): array
