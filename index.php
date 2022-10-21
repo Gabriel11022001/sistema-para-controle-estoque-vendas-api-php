@@ -31,7 +31,7 @@ if ($endpoint === '/api/categoria-produto' && $metodo === 'POST') {
 } elseif ($endpoint === '/api/categoria-produto' && $metodo === 'PUT') {
     // Editar a categoria de produto.
     CategoriaProdutoController::editarCategoriaDeProduto();
-} elseif ($endpoint === '/api/categoria-produto/alterar-status' && $metodo === 'PUT') {
+} elseif (str_contains($endpoint, '/api/categoria-produto/alterar-status') && $metodo === 'PUT') {
     // Alterar o status da categoria de produto.
 } else {
     // Caso o usuário faça uma requisição para um endpoint inválido!

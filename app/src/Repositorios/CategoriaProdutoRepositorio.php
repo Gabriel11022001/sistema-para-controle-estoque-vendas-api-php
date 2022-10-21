@@ -66,6 +66,12 @@ class CategoriaProdutoRepositorio implements IRepositorio
             'status' => $dadosCategoriaProduto['categoria_produto_status'] === 1 ? true : false
         ];
     }
+
+    /**
+     * @return array
+     * Método da camada de repositório para consultar todas as categorias
+     * no banco de dados.
+     */
     public function buscarTodos(): array
     {
         $query = 'SELECT * FROM tbl_categorias_produtos;';
