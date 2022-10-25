@@ -30,10 +30,7 @@ class CategoriaProdutoRepositorio implements IRepositorio
         $stmt = $this->conexaoBancoDados->prepare($query);
         $stmt->bindValue(':categoria_produto_descricao', $dadosEntidade['descricao']);
         $stmt->bindValue(':categoria_produto_status', $dadosEntidade['status'], PDO::PARAM_BOOL);
-        if ($stmt->execute()) {
-            return true;
-        }
-        return false;
+        return $stmt->execute();
     }
     public function editar(array $dadosEntidade): bool
     {
@@ -45,10 +42,7 @@ class CategoriaProdutoRepositorio implements IRepositorio
         $stmt->bindValue(':categoria_produto_descricao', $dadosEntidade['descricao']);
         $stmt->bindValue(':categoria_produto_status', $dadosEntidade['status'], PDO::PARAM_BOOL);
         $stmt->bindValue(':categoria_produto_id', $dadosEntidade['id'], PDO::PARAM_INT);
-        if ($stmt->execute()) {
-            return true;
-        }
-        return false;
+        return $stmt->execute();
     }
     public function buscarPeloId(int $id): array
     {
@@ -66,7 +60,6 @@ class CategoriaProdutoRepositorio implements IRepositorio
             'status' => $dadosCategoriaProduto['categoria_produto_status'] === 1 ? true : false
         ];
     }
-
     /**
      * @return array
      * Método da camada de repositório para consultar todas as categorias

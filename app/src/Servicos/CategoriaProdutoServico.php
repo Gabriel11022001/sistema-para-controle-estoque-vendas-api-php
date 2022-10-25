@@ -43,13 +43,15 @@ class CategoriaProdutoServico
                 $resposta['status'] = 201;
                 $categoriaProdutoDados['id'] = $pdo->lastInsertId();
                 $resposta['conteudo'] = $categoriaProdutoDados;
+                // Comitando transação.
+                $pdo->commit();
             } else {
                 $resposta['status'] = 500;
                 $resposta['conteudo'] = 'Ocorreu um erro ao tentar-se cadastrar essa categoria no 
                 banco de dados, tente novamente!';
+                // Realizando o rollback da transação.
+                $pdo->rollBack();
             }
-            // Comitando transação.
-            $pdo->commit();
         } catch (DadosFormularioInvalidoException $e) {
             $resposta['status'] = 400;
             $resposta['conteudo'] = $e->getMessage();
@@ -160,13 +162,15 @@ class CategoriaProdutoServico
             if ($categoriaProdutoRepositorio->editar($categoriaProdutoDados)) {
                 $resposta['status'] = 200;
                 $resposta['conteudo'] = $categoriaProdutoDados;
+                // Comitando a transação.
+                $pdo->commit();
             } else {
                 $resposta['status'] = 500;
                 $resposta['conteudo'] = 'Ocorreu um erro ao tentar-se editar 
                 essa categoria, tente novamente!';
+                // Realizando o rollback da transação.
+                $pdo->rollBack();
             }
-            // Comitando a transação.
-            $pdo->commit();
         } catch (DadosFormularioInvalidoException $e) {
             $resposta['status'] = 400;
             $resposta['conteudo'] = $e->getMessage();

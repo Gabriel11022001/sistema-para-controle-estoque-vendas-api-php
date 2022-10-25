@@ -7,7 +7,10 @@ use GabrielSantos\SistemaControleEstoqueVendas\Utils\{
     LiberaCors,
     DefineTimezoneDefault
 };
-use GabrielSantos\SistemaControleEstoqueVendas\Controllers\CategoriaProdutoController;
+use GabrielSantos\SistemaControleEstoqueVendas\Controllers\{
+    CategoriaProdutoController,
+    ProdutoController
+};
 
 // Liberar o CORS.
 LiberaCors::liberarCors();
@@ -33,6 +36,9 @@ if ($endpoint === '/api/categoria-produto' && $metodo === 'POST') {
     CategoriaProdutoController::editarCategoriaDeProduto();
 } elseif (str_contains($endpoint, '/api/categoria-produto/alterar-status') && $metodo === 'PUT') {
     // Alterar o status da categoria de produto.
+} elseif ($endpoint === '/api/produto' && $metodo === 'POST') {
+    // Cadastrar produto no banco de dados.
+    ProdutoController::cadastrarProduto();
 } else {
     // Caso o usuário faça uma requisição para um endpoint inválido!
     echo json_encode([
