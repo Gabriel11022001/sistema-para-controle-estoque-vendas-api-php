@@ -39,6 +39,9 @@ if ($endpoint === '/api/categoria-produto' && $metodo === 'POST') {
 } elseif ($endpoint === '/api/produto' && $metodo === 'POST') {
     // Cadastrar produto no banco de dados.
     ProdutoController::cadastrarProduto();
+} elseif ($endpoint === '/api/produto' && $metodo === 'GET') {
+    // Buscar todos os produtos cadastrados no banco de dados.
+    ProdutoController::buscarTodosProdutos();
 } else {
     // Caso o usuário faça uma requisição para um endpoint inválido!
     echo json_encode([

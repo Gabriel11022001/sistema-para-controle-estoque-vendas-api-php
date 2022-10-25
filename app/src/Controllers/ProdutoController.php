@@ -11,4 +11,9 @@ class ProdutoController
         $produtoServico = new ProdutoServico();
         echo json_encode($produtoServico->cadastrarProduto());
     }
+    public static function buscarTodosProdutos(): void
+    {
+        $produtoServico = new ProdutoServico();
+        echo json_encode($produtoServico->buscarTodosProdutos());
+    }
 }

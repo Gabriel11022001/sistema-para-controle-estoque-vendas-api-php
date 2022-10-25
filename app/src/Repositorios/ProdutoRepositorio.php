@@ -55,6 +55,11 @@ class ProdutoRepositorio implements IRepositorio
     }
     public function buscarTodos(): array
     {
-        return [];
+        $query = 'SELECT * FROM tbl_produtos 
+            INNER JOIN tbl_categorias_produtos
+            ON tbl_produtos.categoria_produto_id = tbl_categorias_produtos.categoria_produto_id;';
+        $stmt = $this->conexaoBancoDados->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

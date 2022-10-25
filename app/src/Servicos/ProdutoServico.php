@@ -6,6 +6,7 @@ use Exception;
 use GabrielSantos\SistemaControleEstoqueVendas\Exceptions\DadosFormularioInvalidoException;
 use GabrielSantos\SistemaControleEstoqueVendas\Repositorios\ConexaoBancoDados;
 use GabrielSantos\SistemaControleEstoqueVendas\Repositorios\ProdutoRepositorio;
+use GabrielSantos\SistemaControleEstoqueVendas\Utils\ConverterArrayBancoDadosParaArrayRespostaProduto;
 use GabrielSantos\SistemaControleEstoqueVendas\Utils\Json;
 
 class ProdutoServico
@@ -64,6 +65,29 @@ class ProdutoServico
             $resposta['conteudo'] = $e->getMessage();
             // Realizando o rollback da transação.
             $pdo->rollBack();
+        }
+        return $resposta;
+    }
+    public function buscarTodosProdutos(): array
+    {
+        $conexao = new ConexaoBancoDados();
+        $pdo = $conexao->getConexao();
+        if (is_null($pdo)) {
+            return [
+                'status' => 500,
+                'conteudo' => 'Ocorreu um erro ao tentar-se realizar a conexão com o banco de dados!'
+            ];
+        }
+        $resposta = [];
+        try {
+            $produtoRepositorio = new ProdutoRepositorio($pdo);
+            $produtos = $produtoRepositorio->buscarTodos();
+            $produtos = ConverterArrayBancoDadosParaArrayRespostaProduto::converter($produtos);
+            $resposta['status'] = 200;
+            $resposta['conteudo'] = $produtos;
+        } catch (Exception $e) {
+            $resposta['status'] = 500;
+            $resposta['conteudo'] = $e->getMessage();
         }
         return $resposta;
     }
