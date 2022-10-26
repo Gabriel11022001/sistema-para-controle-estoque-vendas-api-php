@@ -42,6 +42,9 @@ if ($endpoint === '/api/categoria-produto' && $metodo === 'POST') {
 } elseif ($endpoint === '/api/produto' && $metodo === 'GET') {
     // Buscar todos os produtos cadastrados no banco de dados.
     ProdutoController::buscarTodosProdutos();
+} elseif (str_contains($endpoint, '/api/produto/buscar-pelo-id') && $metodo === 'GET') {
+    // Buscar produto pelo id.
+    ProdutoController::buscarProdutoPeloId();
 } else {
     // Caso o usuário faça uma requisição para um endpoint inválido!
     echo json_encode([

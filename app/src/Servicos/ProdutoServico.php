@@ -91,4 +91,35 @@ class ProdutoServico
         }
         return $resposta;
     }
+    public function buscarProdutoPeloId(): array
+    {
+        $conexao = new ConexaoBancoDados();
+        $pdo = $conexao->getConexao();
+        if (is_null($pdo)) {
+            return [
+                'status' => 500,
+                'conteudo' => 'Ocorreu um erro ao tentar-se realizar a conexão com o banco de dados!'
+            ];
+        }
+        $resposta = [];
+        try {
+            if (empty($_GET['id'])) {
+                $resposta['status'] = 500;
+                $resposta['conteudo'] = 'O id do produto não foi informado!';
+            } else {
+                $id = intval($_GET['id']);
+                $produtoRepositorio = new ProdutoRepositorio($pdo);
+                $dadosProduto = $produtoRepositorio->buscarPeloId($id);
+                $resposta['status'] = 200;
+                $resposta['conteudo'] = [
+                    'id' => $dadosProduto['produto_id'],
+                    'nome' => $dadosProduto['produto_nome']
+                ];
+            }
+        } catch (Exception $e) {
+            $resposta['status'] = 500;
+            $resposta['conteudo'] = $e->getMessage();
+        }
+        return $resposta;
+    }
 }

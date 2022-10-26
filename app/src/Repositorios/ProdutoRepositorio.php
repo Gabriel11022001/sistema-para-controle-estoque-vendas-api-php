@@ -49,9 +49,26 @@ class ProdutoRepositorio implements IRepositorio
     {
         return false;
     }
+    /**
+     * @param int $id
+     * @return array
+     * Método da camada de repositório para buscar um produto
+     * cadastrado no banco de dados pelo id.
+     */
     public function buscarPeloId(int $id): array
     {
-        return [];
+        $query = 'SELECT * FROM tbl_produtos
+            INNER JOIN tbl_categorias_produtos
+            ON tbl_produtos.categoria_produto_id = tbl_categorias_produtos.categoria_produto_id
+            AND produto_id = :id;';
+        $stmt = $this->conexaoBancoDados->prepare($query);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($produto === false) {
+            return [];
+        }
+        return $produto;
     }
     public function buscarTodos(): array
     {
