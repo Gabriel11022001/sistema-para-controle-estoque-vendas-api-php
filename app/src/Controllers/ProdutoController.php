@@ -21,4 +21,9 @@ class ProdutoController
         $produtoServico = new ProdutoServico();
         echo json_encode($produtoServico->buscarProdutoPeloId());
     }
+    public static function editarProduto(): void
+    {
+        $produtoServico = new ProdutoServico();
+        echo json_encode($produtoServico->editarProduto());
+    }
 }

@@ -13,7 +13,7 @@ create table tbl_produtos(
     produto_nome text not null,
     produto_descricao text not null,
     produto_codigo_barras text not null,
-    produto_preco_venda decimal not null,
+    produto_preco_venda decimal(10, 2) not null,
     produto_qtd_unidades_estoque int not null,
     produto_status bool not null,
     categoria_produto_id int not null,
