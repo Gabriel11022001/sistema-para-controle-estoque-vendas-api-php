@@ -33,4 +33,9 @@ class CategoriaProdutoController
         $categoriaProdutoServico = new CategoriaProdutoServico();
         echo json_encode($categoriaProdutoServico->editarCategoriaProduto());
     }
+    public static function alterarStatusDaCategoria(): void
+    {
+        $categoriaProdutoServico = new CategoriaProdutoServico();
+        echo json_encode($categoriaProdutoServico->alterarStatusDaCategoriaDoProduto());
+    }
 }

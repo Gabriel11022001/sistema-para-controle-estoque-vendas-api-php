@@ -184,4 +184,49 @@ class CategoriaProdutoServico
         }
         return $resposta;
     }
+    public function alterarStatusDaCategoriaDoProduto(): array
+    {
+        $conexao = new ConexaoBancoDados();
+        $pdo = $conexao->getConexao();
+        if (is_null($pdo)) {
+            return [
+                'status' => 500,
+                'conteudo' => 'Ocorreu um erro ao tentar-se realizar a conexão com o banco de dados!'
+            ];
+        }
+        $resposta = [];
+        try {
+            if (empty($_GET['id']) || empty($_GET['statusAtual'])) {
+                throw new Exception('Informe o id e o status atual da categoria!');
+            }
+            $id = $_GET['id'];
+            $statusAtual = $_GET['statusAtual'];
+            if ($statusAtual === 'true' || $statusAtual === 1) {
+                $statusAtual = true;
+            } else {
+                $statusAtual = false;
+            }
+            $categoriaDeProdutoRepositorio = new CategoriaProdutoRepositorio($pdo);
+            $categoriaAtualizarStatus = $categoriaDeProdutoRepositorio->buscarPeloId($id);
+            if (count($categoriaAtualizarStatus) === 0) {
+                throw new Exception('Não existe uma categoria cadastrada no banco de dados com esse id!');
+            }
+            if ($categoriaDeProdutoRepositorio->alterarStatus($id, $statusAtual)) {
+                if ($statusAtual) {
+                    $categoriaAtualizarStatus['status'] = false;
+                } else {
+                    $categoriaAtualizarStatus['status'] = true;
+                }
+                $resposta['status'] = 200;
+                $resposta['conteudo'] = $categoriaAtualizarStatus;
+            } else {
+                $resposta['status'] = 500;
+                $resposta['conteudo'] = 'Ocorreu um erro ao tentar-se alterar o status dessa categoria, tente novamente!';
+            }
+        } catch (Exception $e) {
+            $resposta['status'] = 500;
+            $resposta['conteudo'] = $e->getMessage();
+        }
+        return $resposta;
+    }
 }

@@ -34,8 +34,9 @@ if ($endpoint === '/api/categoria-produto' && $metodo === 'POST') {
 } elseif ($endpoint === '/api/categoria-produto' && $metodo === 'PUT') {
     // Editar a categoria de produto.
     CategoriaProdutoController::editarCategoriaDeProduto();
-} elseif (str_contains($endpoint, '/api/categoria-produto/alterar-status') && $metodo === 'PUT') {
+} elseif (str_contains($endpoint, '/api/categoria-produto/alterar-status') && $metodo === 'GET') {
     // Alterar o status da categoria de produto.
+    CategoriaProdutoController::alterarStatusDaCategoria();
 } elseif ($endpoint === '/api/produto' && $metodo === 'POST') {
     // Cadastrar produto no banco de dados.
     ProdutoController::cadastrarProduto();

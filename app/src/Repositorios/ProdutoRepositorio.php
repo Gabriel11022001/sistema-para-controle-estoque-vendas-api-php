@@ -5,7 +5,7 @@ namespace GabrielSantos\SistemaControleEstoqueVendas\Repositorios;
 use GabrielSantos\SistemaControleEstoqueVendas\Exceptions\ObjetoConexaoBancoDadosInvalidoException;
 use PDO;
 
-class ProdutoRepositorio implements IRepositorio
+class ProdutoRepositorio implements IRepositorioAlteraStatus
 {
     private PDO $conexaoBancoDados;
 
@@ -121,5 +121,9 @@ class ProdutoRepositorio implements IRepositorio
             return [];
         }
         return $produto;
+    }
+    public function alterarStatus(int $id, bool $statusAtual): bool
+    {
+        return false;
     }
 }

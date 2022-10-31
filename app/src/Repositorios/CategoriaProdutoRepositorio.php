@@ -5,7 +5,7 @@ namespace GabrielSantos\SistemaControleEstoqueVendas\Repositorios;
 use GabrielSantos\SistemaControleEstoqueVendas\Exceptions\ObjetoConexaoBancoDadosInvalidoException;
 use PDO;
 
-class CategoriaProdutoRepositorio implements IRepositorio
+class CategoriaProdutoRepositorio implements IRepositorioAlteraStatus
 {
     private PDO $conexaoBancoDados;
 
@@ -72,5 +72,17 @@ class CategoriaProdutoRepositorio implements IRepositorio
         $stmt->execute();
         $categoriasDados = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $categoriasDados;
+    }
+    public function alterarStatus(int $id, bool $statusAtual): bool
+    {
+        $novoStatus = false;
+        if ($statusAtual === false) {
+            $novoStatus = true;
+        }
+        $query = 'UPDATE tbl_categorias_produtos SET categoria_produto_status = :categoria_produto_status WHERE categoria_produto_id = :categoria_produto_id;';
+        $stmt = $this->conexaoBancoDados->prepare($query);
+        $stmt->bindValue(':categoria_produto_id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':categoria_produto_status', $novoStatus, PDO::PARAM_BOOL);
+        return $stmt->execute();
     }
 }
