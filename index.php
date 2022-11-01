@@ -9,7 +9,8 @@ use GabrielSantos\SistemaControleEstoqueVendas\Utils\{
 };
 use GabrielSantos\SistemaControleEstoqueVendas\Controllers\{
     CategoriaProdutoController,
-    ProdutoController
+    ProdutoController,
+    UsuarioController
 };
 
 // Liberar o CORS.
@@ -49,6 +50,9 @@ if ($endpoint === '/api/categoria-produto' && $metodo === 'POST') {
 } elseif ($endpoint === '/api/produto' && $metodo === 'PUT') {
     // Editar os dados de um produto.
     ProdutoController::editarProduto();
+} elseif ($endpoint === '/api/usuario' && $metodo === 'GET') {
+    // Buscar todos os usuários cadastrados no banco de dados.
+    UsuarioController::buscarTodosOsUsuarios();
 } else {
     // Caso o usuário faça uma requisição para um endpoint inválido!
     echo json_encode([

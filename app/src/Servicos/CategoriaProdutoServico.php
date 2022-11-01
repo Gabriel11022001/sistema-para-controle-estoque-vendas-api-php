@@ -195,6 +195,8 @@ class CategoriaProdutoServico
             ];
         }
         $resposta = [];
+        // Iniciando a transação.
+        $pdo->beginTransaction();
         try {
             if (empty($_GET['id']) || empty($_GET['statusAtual'])) {
                 throw new Exception('Informe o id e o status atual da categoria!');
@@ -219,13 +221,19 @@ class CategoriaProdutoServico
                 }
                 $resposta['status'] = 200;
                 $resposta['conteudo'] = $categoriaAtualizarStatus;
+                // Comitando a transação.
+                $pdo->commit();
             } else {
                 $resposta['status'] = 500;
                 $resposta['conteudo'] = 'Ocorreu um erro ao tentar-se alterar o status dessa categoria, tente novamente!';
+                // Realizando o rollback da transação.
+                $pdo->rollBack();
             }
         } catch (Exception $e) {
             $resposta['status'] = 500;
             $resposta['conteudo'] = $e->getMessage();
+            // Realizando o rollback da transação.
+            $pdo->rollBack();
         }
         return $resposta;
     }
