@@ -1,0 +1,25 @@
+version: '3'
+# Redes
+networks:
+  network-sistema-controle-estoque-vendas:
+    driver: bridge
+services:
+  # Container do mysql
+  db:
+    build: ./docker/docker_mysql/
+    container_name: container-banco-dados-mysql
+    ports:
+      - "8000:3306"
+    networks:
+      - network-sistema-controle-estoque-vendas
+  # Container do php com um servidor de aplicação http-apache
+  php:
+    build: ./docker/docker_php/
+    container_name: container-php
+    ports:
+      - "8080:80"
+    networks:
+      - network-sistema-controle-estoque-vendas
+    volumes:
+      - ./:/var/www/html
+    

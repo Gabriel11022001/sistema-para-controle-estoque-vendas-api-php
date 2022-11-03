@@ -21,6 +21,7 @@ ConfiguraEnctypeEContentTypeApp::configurarEnctypeEContentType();
 DefineTimezoneDefault::definirTimezoneDefault();
 // Endpoint da api.
 $endpoint = $_SERVER['REQUEST_URI'];
+$endpoint = str_replace('/index.php', '', $endpoint);
 // Método HTTP da requisição.
 $metodo = $_SERVER['REQUEST_METHOD'];
 if ($endpoint === '/api/categoria-produto' && $metodo === 'POST') {
