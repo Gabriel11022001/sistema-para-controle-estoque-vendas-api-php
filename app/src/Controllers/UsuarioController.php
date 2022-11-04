@@ -11,4 +11,9 @@ class UsuarioController
         $usuarioServico = new UsuarioServico();
         echo json_encode($usuarioServico->buscarTodosUsuarios());
     }
+    public static function cadastrarUsuario(): void
+    {
+        $usuarioServico = new UsuarioServico();
+        echo json_encode($usuarioServico->cadastrarUsuario());
+    }
 }

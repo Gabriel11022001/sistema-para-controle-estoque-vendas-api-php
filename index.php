@@ -54,6 +54,9 @@ if ($endpoint === '/api/categoria-produto' && $metodo === 'POST') {
 } elseif ($endpoint === '/api/usuario' && $metodo === 'GET') {
     // Buscar todos os usuários cadastrados no banco de dados.
     UsuarioController::buscarTodosOsUsuarios();
+} elseif ($endpoint === '/api/usuario' && $metodo === 'POST') {
+    // Cadastrar usuário no banco de dados.
+    UsuarioController::cadastrarUsuario();
 } else {
     // Caso o usuário faça uma requisição para um endpoint inválido!
     echo json_encode([

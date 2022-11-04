@@ -14,7 +14,13 @@ class UsuarioRepositorio implements IRepositorioAlteraStatus
     }
     public function salvar(array $dadosEntidade): bool
     {
-        return true;
+        $query = 'INSERT INTO tbl_usuarios(usuario_nome, usuario_login, usuario_senha, usuario_nivel_acesso) VALUES(:usuario_nome, :usuario_login, :usuario_senha, :usuario_nivel_acesso);';
+        $stmt = $this->conexaoBancoDados->prepare($query);
+        $stmt->bindValue(':usuario_nome', $dadosEntidade['nome']);
+        $stmt->bindValue(':usuario_login', $dadosEntidade['login']);
+        $stmt->bindValue(':usuario_senha', md5($dadosEntidade['senha']));
+        $stmt->bindValue(':usuario_nivel_acesso', $dadosEntidade['nivelAcesso'], PDO::PARAM_INT);
+        return $stmt->execute();
     }
     public function editar(array $dadosEntidade): bool
     {

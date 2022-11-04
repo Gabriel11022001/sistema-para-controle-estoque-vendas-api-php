@@ -1,4 +1,4 @@
-version: '3'
+version: '2.12.2'
 # Redes
 networks:
   network-sistema-controle-estoque-vendas:
@@ -12,6 +12,9 @@ services:
       - "8000:3306"
     networks:
       - network-sistema-controle-estoque-vendas
+    restart: always
+    volumes:
+      - ./app/database/mysql:/var/lib/mysql
   # Container do php com um servidor de aplicação http-apache
   php:
     build: ./docker/docker_php/
@@ -22,4 +25,5 @@ services:
       - network-sistema-controle-estoque-vendas
     volumes:
       - ./:/var/www/html
+    restart: always
     
